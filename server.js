@@ -40,12 +40,24 @@ app.post('/todos', function (request, response) {
     }
 
     body.description = body.description.trim();
-
     body.id = todoNextId++;
 
     todos.push(body);
-
     response.json(body);
+});
+
+// DELETE /todos/:id
+
+app.delete('/todos/:id', function (request, response) {
+    var todoId = parseInt(request.params.id);
+    var todo = _.findWhere(todos, {id: todoId});
+
+    if(todo) {
+        todos = _.without(todos, todo);
+        response.json(todo);
+    } else {
+        response.status(404).json({error: 'no todo found with id + ' todoId});
+    }
 });
 
 app.listen(PORT, function () {
